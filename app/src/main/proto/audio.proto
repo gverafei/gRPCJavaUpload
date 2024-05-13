@@ -1,0 +1,28 @@
+// syntax aquí representa la versión de Protobuf que estamos usando
+syntax = "proto3";
+
+// Esto es específico de Java
+// El paquete donde generar automáticamente el código a partir del archivo ".proto"
+option java_package = "com.proto.audio";
+
+// Se utiliza para enviar mensajes de texto entre los nodos
+message DownloadFileRequest {
+    string nombre = 1;
+ }
+ 
+ // Se utiliza para enviar los chunks de los archivos
+ message DataChunkResponse {
+    oneof request {
+        bytes data = 1;
+        string nombre = 2;
+    }
+ }
+
+// Este bloque representa el nombre del servicio "AudioService"
+service AudioService {
+    // Esta es la función para descargar archivos
+    rpc downloadAudio (DownloadFileRequest) returns (stream DataChunkResponse);
+ 
+    // Esta es la función para subir archivos
+    rpc uploadAudio (stream DataChunkResponse) returns (DownloadFileRequest);
+ }
